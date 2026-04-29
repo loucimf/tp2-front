@@ -8,6 +8,8 @@ export const supabase =
     ? createClient(supabaseUrl, supabaseAnonKey)
     : null;
 
+console.log("client:", supabase)
+
 const signUp = async (email: string, password: string) => {
   if (!supabase) { console.log("no supabase signup"); return}
   const { data, error } = await supabase.auth.signUp({ email, password });
