@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-
+const RAWG_API_KEY = "fbb18d0389b745c3a56e33b1f5ce6d00"
 const supabaseUrl =
   import.meta.env.VITE_SUPABASE_URL ??
   import.meta.env.VITE_PUBLIC_SUPABASE_URL;
