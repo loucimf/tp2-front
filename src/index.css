@@ -1,11 +1,9 @@
 :root {
-  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #f4efe6;
-  background:
-    radial-gradient(circle at top, rgba(253, 186, 116, 0.2), transparent 32%),
-    linear-gradient(160deg, #12100e 0%, #1f1a16 48%, #2b2119 100%);
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-base);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-primary);
+  background: var(--background-page);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,78 +16,82 @@
 
 body {
   margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+  min-width: var(--size-root-min-width);
+  min-height: var(--size-screen-min-height);
+  background: var(--background-page);
+  color: var(--color-text-primary);
 }
 
 code {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: var(--font-family-mono);
 }
 
 #root {
-  min-height: 100vh;
+  min-height: var(--size-screen-min-height);
 }
 
 .app-shell {
-  min-height: 100vh;
+  min-height: var(--size-screen-min-height);
   display: grid;
   place-items: center;
-  padding: 2rem;
+  padding: var(--space-xl);
 }
 
 .hero-card {
-  width: min(720px, 100%);
-  padding: 3rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 28px;
-  background: rgba(17, 14, 12, 0.72);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(18px);
+  width: min(var(--size-card-max-width), 100%);
+  padding: var(--space-2xl);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-2);
+  box-shadow: var(--shadow-elevation-lg);
+  backdrop-filter: blur(var(--blur-surface));
 }
 
 .eyebrow {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--space-md);
   text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: #f2b56b;
-  font-size: 0.78rem;
+  letter-spacing: var(--size-eyebrow-letter-spacing);
+  color: var(--color-accent);
+  font-size: var(--size-eyebrow-font);
 }
 
 h1 {
   margin: 0;
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-size: var(--size-heading);
   line-height: 0.95;
 }
 
 .description {
-  margin: 1.5rem 0 0;
-  max-width: 52ch;
-  color: rgba(244, 239, 230, 0.82);
-  font-size: 1.05rem;
+  margin: var(--space-lg) 0 0;
+  max-width: var(--size-measure);
+  color: var(--color-text-secondary);
+  font-size: var(--size-body-font);
 }
 
 .status-row {
-  margin-top: 2rem;
+  margin-top: var(--space-xl);
 }
 
 .status {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 1rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(244, 239, 230, 0.82);
+  gap: var(--size-status-dot-gap);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border-soft);
+  color: var(--color-text-secondary);
 }
 
 .status-live {
-  background: rgba(16, 185, 129, 0.14);
-  color: #b6f5db;
+  background: var(--color-success-soft);
+  border-color: var(--color-success-border);
+  color: var(--color-success);
 }
 
 @media (max-width: 640px) {
   .hero-card {
-    padding: 2rem;
-    border-radius: 22px;
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
   }
 }
