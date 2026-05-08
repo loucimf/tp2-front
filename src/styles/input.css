@@ -30,6 +30,10 @@
   box-shadow: var(--shadow-focus), var(--shadow-elevation-lg);
 }
 
+.input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
 .input:disabled,
 .input[aria-disabled="true"] {
   background: var(--color-surface-disabled);
@@ -38,4 +42,26 @@
   cursor: not-allowed;
   opacity: var(--opacity-disabled);
   box-shadow: none;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.input-label {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.input-meta {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.input-meta-error {
+  color: var(--color-danger);
 }

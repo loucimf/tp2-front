@@ -1,12 +1,8 @@
-import { useMemo } from "react";
-import { supabase } from "./lib/supabase";
-import { LoginPage } from "./pages/LoginPage";
+import { CredentialPage } from "./pages/CredentialPage";
 
 function App() {
-	const supabaseConfigured = useMemo(() => Boolean(supabase), []);
-
 	return (
-		<LoginPage />
+		<CredentialPage />
 	);
 }
 
