@@ -1,0 +1,26 @@
+.gap-sm {
+    gap: 10px;
+}
+
+.gap-md {
+    gap: 20px;
+}
+
+.gap-lg {
+    gap: 40px;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn {
+    transition: ease 0.1s;
+}
+
+.btn.active {
+    transform: scale(0.98);
+    background-color: grey;
+}
