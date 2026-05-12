@@ -1,8 +1,19 @@
 import MainContent from "../components/MainContent";
+import { useGames } from "../hooks/useGames";
 
 const ExplorePage: React.FC<{}> = ({
 
 }) => {
+    const {
+        count,
+        error,
+        games,
+        isLoading,
+        next,
+        previous,
+        refetch,
+    } = useGames();
+    
 	return (
 		<MainContent>
             <div className="height width flex center column">

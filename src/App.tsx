@@ -24,9 +24,9 @@ function App() {
 	return (
 		auth.isAuthenticated ? (
 			<MainContent use_viewport={true}>
-				<Sidebar class_width="width-15" buttons={buttons} />
+				<Sidebar class_width="width-20" buttons={buttons} />
 
-				<MainContent class_width="width-85">
+				<MainContent class_width="width-80">
 					{buttons.find((button) => button.label === activeTab)?.content}
 				</MainContent>
 			</MainContent>
