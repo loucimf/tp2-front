@@ -1,15 +1,19 @@
 import { SidebarButton } from "./Buttons";
 
+interface SidebarButtonProps {
+    label: string;
+    onClick?: () => void;
+}
 
-export const Sidebar: React.FC = () => {
+type SidebarProps = {
+    buttons: SidebarButtonProps[];
+    class_width: string;
+}
 
-    const buttons = [
-        { label: "Library", onClick: () => console.log("Library clicked") },
-        { label: "Explore", onClick: () => console.log("Explore clicked") },
-    ]
+export const Sidebar: React.FC<SidebarProps> = ({ buttons, class_width }) => {
 
     return (
-        <div className="flex column width-15 height flex-start sidebar">
+        <div className={`flex column ${class_width} height flex-start sidebar`}>
             <div className="flex row width center">
                 <h2 className="">STEVE</h2>
             </div>

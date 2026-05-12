@@ -1,15 +1,34 @@
+import { useState } from "react";
 import MainContent from "./components/MainContent";
 import { Sidebar } from "./components/Sidebar";
 import { useAuth } from "./hooks/useAuth";
 import { CredentialPage } from "./pages/CredentialPage";
+import LibraryPage from "./pages/LibraryPage";
+import ExplorePage from "./pages/ExplorePage";
 
 function App() {
+
+	const handleButton = (label: string) => () => {
+		console.log(`${label} clicked`);
+		setActiveTab(label);
+	};
+
+	const buttons = [
+        { label: "Library", onClick: handleButton("Library"), content: <LibraryPage /> },
+        { label: "Explore", onClick: handleButton("Explore"), content: <ExplorePage /> },
+    ]
+	
+	const [activeTab, setActiveTab] = useState<string>(buttons[0].label);
 	const auth = useAuth("sign-in");
 
 	return (
 		auth.isAuthenticated ? (
-			<MainContent>
-				<Sidebar />
+			<MainContent use_viewport={true}>
+				<Sidebar class_width="width-20" buttons={buttons} />
+
+				<MainContent class_width="width-80">
+					{buttons.find((button) => button.label === activeTab)?.content}
+				</MainContent>
 			</MainContent>
 		) : (
 			<CredentialPage auth={auth} />
