@@ -219,3 +219,4 @@ export const useAuth = (initialMode: AuthMode = "sign-up") => {
   };
 };
 
+export type UseAuthResult = ReturnType<typeof useAuth>;

@@ -1,20 +1,18 @@
 import TextInput from "../components/Inputs";
 import { CredentialButton } from "../components/Buttons";
-import { useAuth } from "../hooks/useAuth";
+import type { UseAuthResult } from "../hooks/useAuth";
 
-export const CredentialPage: React.FC = () => {
+export const CredentialPage: React.FC<{
+    auth: UseAuthResult;
+}> = ({ auth }) => {
     const {
-        canSubmit,
         email,
         errors,
         feedback,
-        isAuthenticated,
         isConfigured,
         isLoading,
         mode,
         password,
-        session,
-        signOut,
         submit,
         submitLabel,
         switchActionLabel,
@@ -23,7 +21,7 @@ export const CredentialPage: React.FC = () => {
         toggleMode,
         updateEmail,
         updatePassword,
-    } = useAuth();
+    } = auth;
 
     const isSignup = mode === "sign-up";
 
@@ -50,75 +48,62 @@ export const CredentialPage: React.FC = () => {
                     </p>
                 )}
 
-                {isAuthenticated ? (
-                    <div className="auth-panel">
-                        <p className="auth-feedback auth-feedback-success">
-                            Signed in as <strong>{session?.user.email}</strong>.
-                        </p>
-                        <CredentialButton
-                            label="Sign out"
-                            onClick={signOut}
+                <form className="auth-form" onSubmit={handleSubmit}>
+                    <div className="flex column gap-md">
+                        <TextInput
+                            type="email"
+                            label="Email"
+                            value={email}
+                            onChange={updateEmail}
+                            error={errors.email}
+                            placeholder="name@example.com"
+                            autoComplete="email"
+                            id="auth-email"
+                            disabled={isLoading}
+                        />
+                        <TextInput
+                            type="password"
+                            label="Password"
+                            value={password}
+                            onChange={updatePassword}
+                            error={errors.password}
+                            placeholder="••••••••"
+                            autoComplete={isSignup ? "new-password" : "current-password"}
+                            id="auth-password"
                             disabled={isLoading}
                         />
                     </div>
-                ) : (
-                    <form className="auth-form" onSubmit={handleSubmit}>
-                        <div className="flex column gap-md">
-                            <TextInput
-                                type="email"
-                                label="Email"
-                                value={email}
-                                onChange={updateEmail}
-                                error={errors.email}
-                                placeholder="name@example.com"
-                                autoComplete="email"
-                                id="auth-email"
-                                disabled={isLoading}
-                            />
-                            <TextInput
-                                type="password"
-                                label="Password"
-                                value={password}
-                                onChange={updatePassword}
-                                error={errors.password}
-                                placeholder="••••••••"
-                                autoComplete={isSignup ? "new-password" : "current-password"}
-                                id="auth-password"
-                                disabled={isLoading}
-                            />
-                        </div>
 
-                        {feedback && (
-                            <p
-                                className={`auth-feedback ${
-                                    feedback.toLowerCase().includes("success") ||
-                                    feedback.toLowerCase().includes("created") ||
-                                    feedback.toLowerCase().includes("signed in")
-                                        ? "auth-feedback-success"
-                                        : "auth-feedback-error"
-                                }`}
-                            >
-                                {feedback}
-                            </p>
-                        )}
+                    {feedback && (
+                        <p
+                            className={`auth-feedback ${
+                                feedback.toLowerCase().includes("success") ||
+                                feedback.toLowerCase().includes("created") ||
+                                feedback.toLowerCase().includes("signed in")
+                                    ? "auth-feedback-success"
+                                    : "auth-feedback-error"
+                            }`}
+                        >
+                            {feedback}
+                        </p>
+                    )}
 
-                        <div className="auth-actions">
-                            <CredentialButton
-                                type="submit"
-                                label={isLoading ? "Working..." : submitLabel}
-                                disabled={!isConfigured}
-                            />
-                            <button
-                                type="button"
-                                className="auth-switch"
-                                onClick={toggleMode}
-                                disabled={isLoading}
-                            >
-                                {switchLabel} <span>{switchActionLabel}</span>
-                            </button>
-                        </div>
-                    </form>
-                )}
+                    <div className="auth-actions">
+                        <CredentialButton
+                            type="submit"
+                            label={isLoading ? "Working..." : submitLabel}
+                            disabled={!isConfigured}
+                        />
+                        <button
+                            type="button"
+                            className="auth-switch"
+                            onClick={toggleMode}
+                            disabled={isLoading}
+                        >
+                            {switchLabel} <span>{switchActionLabel}</span>
+                        </button>
+                    </div>
+                </form>
             </section>
         </main>
     );

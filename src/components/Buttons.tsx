@@ -39,3 +39,33 @@ export const CredentialButton: React.FC<BaseButtonProps> = ({
         </button>
     );
 };
+
+export const SidebarButton: React.FC<BaseButtonProps> = ({
+    disabled = false,
+    onClick,
+    label,
+    type = "button",
+}) => {
+
+    const [active, setActive] = useState(false);
+
+    const handleButton = () => {
+        if (disabled) {
+            return;
+        }
+
+        setActive(true);
+        if (onClick) onClick();
+    }
+
+    return (        
+        <div
+            onClick={() => handleButton()}
+            className={`pointer sidebar-opt ${active ? "active" : ""}`}
+            onMouseOver={() => setActive(true)}
+            onMouseLeave={() => setActive(false)}
+        >
+            {label}
+        </div>
+    );
+}
