@@ -3,6 +3,8 @@ import MainContent from "./components/MainContent";
 import { Sidebar } from "./components/Sidebar";
 import { useAuth } from "./hooks/useAuth";
 import { CredentialPage } from "./pages/CredentialPage";
+import LibraryPage from "./pages/LibraryPage";
+import ExplorePage from "./pages/ExplorePage";
 
 function App() {
 
@@ -12,8 +14,8 @@ function App() {
 	};
 
 	const buttons = [
-        { label: "Library", onClick: handleButton("Library"), content: <div>Library Content</div> },
-        { label: "Explore", onClick: handleButton("Explore"), content: <div>Explore Content</div> },
+        { label: "Library", onClick: handleButton("Library"), content: <LibraryPage /> },
+        { label: "Explore", onClick: handleButton("Explore"), content: <ExplorePage /> },
     ]
 	
 	const [activeTab, setActiveTab] = useState<string>(buttons[0].label);
@@ -21,9 +23,10 @@ function App() {
 
 	return (
 		auth.isAuthenticated ? (
-			<MainContent>
-				<Sidebar buttons={buttons} />
-				<MainContent>
+			<MainContent use_viewport={true}>
+				<Sidebar class_width="width-15" buttons={buttons} />
+
+				<MainContent class_width="width-85">
 					{buttons.find((button) => button.label === activeTab)?.content}
 				</MainContent>
 			</MainContent>
