@@ -1,12 +1,14 @@
 import { SidebarButton } from "./Buttons";
 
+type SidebarProps = {
+    label: string;
+    onClick?: () => void;
+    content: React.ReactNode;
+};
 
-export const Sidebar: React.FC = () => {
+export const Sidebar: React.FC<{ buttons: SidebarProps[] }> = ({ buttons }) => {
 
-    const buttons = [
-        { label: "Library", onClick: () => console.log("Library clicked") },
-        { label: "Explore", onClick: () => console.log("Explore clicked") },
-    ]
+
 
     return (
         <div className="flex column width-15 height flex-start sidebar">
