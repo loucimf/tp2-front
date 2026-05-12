@@ -151,3 +151,33 @@
     color: var(--color-text-disabled);
     cursor: not-allowed;
 }
+
+
+.sidebar {
+    padding: var(--space-lg);
+    border-right: 1px solid var(--color-border-soft);
+    background-color: var(--color-surface-1);
+}
+
+.sidebar-opt {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background-color: var(--color-button-border);
+    color: var(--color-text-secondary);
+    transition:
+        background-color var(--transition-base),
+        color var(--transition-base);
+}
+
+.sidebar-opt.active {
+    background-color: var(--color-accent);
+    color: var(--color-text-primary);
+}
+
+
+.pointer {
+    cursor: pointer;
+}

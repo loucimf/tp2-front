@@ -1,8 +1,19 @@
+import MainContent from "./components/MainContent";
+import { Sidebar } from "./components/Sidebar";
+import { useAuth } from "./hooks/useAuth";
 import { CredentialPage } from "./pages/CredentialPage";
 
 function App() {
+	const auth = useAuth("sign-in");
+
 	return (
-		<CredentialPage />
+		auth.isAuthenticated ? (
+			<MainContent>
+				<Sidebar />
+			</MainContent>
+		) : (
+			<CredentialPage auth={auth} />
+		)
 	);
 }
 
