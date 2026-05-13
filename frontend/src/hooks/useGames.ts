@@ -28,7 +28,7 @@ type UseGamesOptions = {
 };
 
 const gamesApi = new GamesAPI(
-  import.meta.env.VITE_API_URL || API_URLS.DEV,
+  import.meta.env.VITE_API_URL || API_URLS.VERCEL_PROD,
 );
 
 export const useGames = ({

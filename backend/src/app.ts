@@ -1,12 +1,10 @@
 import express from "express";
+import { ALLOWED_ORIGINS } from "./env.js";
 import { apiRouter } from "./routes/index.js";
 
 export const app = express();
 
-const allowedOrigins = (
-  process.env.ALLOWED_ORIGINS ??
-  "http://localhost:5173,http://127.0.0.1:5173,https://tp2-front-git-develop-facundos-projects-140aa994.vercel.app"
-)
+const allowedOrigins = ALLOWED_ORIGINS
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
@@ -46,3 +44,5 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api", apiRouter);
+
+export default app;
