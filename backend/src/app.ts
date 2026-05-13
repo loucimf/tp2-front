@@ -44,3 +44,5 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api", apiRouter);
+
+export default app;
