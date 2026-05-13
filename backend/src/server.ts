@@ -1,6 +1,7 @@
 import { app } from "./app.js";
 import dotenv from "dotenv";
 
+dotenv.config({ path: ".env.local" });
 dotenv.config();
 
 type Environment = "development" | "production" | "test";
