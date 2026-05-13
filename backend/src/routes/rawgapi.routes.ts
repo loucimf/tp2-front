@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { API_KEY } from "../server.js";
+import { RAWG_API_KEY } from "../env.js";
 
 export const rawgapi = Router();
 
@@ -7,7 +7,7 @@ const BASE_URL = "https://api.rawg.io/api/games";
 
 rawgapi.get("/", async (req, res) => {
 
-  if (!API_KEY) {
+  if (!RAWG_API_KEY) {
     res.status(500).json({
       error: "RAWG_API_KEY is not configured.",
     });
@@ -16,7 +16,7 @@ rawgapi.get("/", async (req, res) => {
 
   try {
     const searchParams = new URLSearchParams({
-      key: API_KEY,
+      key: RAWG_API_KEY,
     });
 
     const page =
