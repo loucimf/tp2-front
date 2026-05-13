@@ -7,7 +7,7 @@ export const apiRouter = Router();
 
 apiRouter.get("/", (_req, res) => {
   res.json({
-    message: "Express backend is running",
+    message: "Express backend is running!",
   });
 });
 
