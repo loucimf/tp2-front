@@ -1,5 +1,5 @@
 import express from "express";
-import { ALLOWED_ORIGINS } from "./env.js";
+import { ALLOWED_ORIGINS, ENVIRONMENT } from "./env.js";
 import { apiRouter } from "./routes/index.js";
 
 export const app = express();
@@ -11,6 +11,10 @@ const allowedOrigins = ALLOWED_ORIGINS
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
+
+  if (ENVIRONMENT === "development") {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
 
   if (origin && allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
