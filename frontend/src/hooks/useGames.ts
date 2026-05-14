@@ -6,8 +6,21 @@ type RawgGame = {
 	id: number;
 	name: string;
 	background_image: string | null;
+	genres: Array<{
+		id: number;
+		name: string;
+		slug: string;
+	}>;
 	metacritic: number | null;
+	parent_platforms: Array<{
+		platform: {
+			id: number;
+			name: string;
+			slug: string;
+		};
+	}>;
 	rating: number;
+	ratings_count: number;
 	rating_top: number;
 	released: string | null;
 	slug: string;

@@ -7,6 +7,7 @@ interface BaseButtonProps {
     label?: string;
     type?: "button" | "submit";
     icon?: SVGIcons;
+    className?: string;
 }
 
 export const CredentialButton: React.FC<BaseButtonProps> = ({
@@ -14,6 +15,7 @@ export const CredentialButton: React.FC<BaseButtonProps> = ({
     onClick,
     label,
     type = "button",
+    className,
 }) => { 
 
     const [active, setActive] = useState(false);
@@ -31,7 +33,7 @@ export const CredentialButton: React.FC<BaseButtonProps> = ({
         <button
             type={type}
             disabled={disabled}
-            className={`flex width center input btn credential-btn ${active ? "active" : ""}`}
+            className={`flex width center input btn credential-btn ${className ?? ""} ${active ? "active" : ""}`.trim()}
             onClick={handleButton}
             onMouseDown={() => setActive(true)}
             onMouseUp={() => setActive(false)}
@@ -48,33 +50,18 @@ export const SidebarButton: React.FC<BaseButtonProps> = ({
     label,
     type = "button",
     icon,
+    className,
 }) => {
 
-    const [active, setActive] = useState(false);
-
-    const style = {
-        height: "3.5rem",
-    }
-
-    const handleButton = () => {
-        if (disabled) {
-            return;
-        }
-
-        setActive(true);
-        if (onClick) onClick();
-    }
-
     return (        
-        <div
-            style={style}
-            onClick={() => handleButton()}
-            className={`flex align-center justify-start padding-md pointer btn ${active ? "active" : ""}`}
-            onMouseOver={() => setActive(true)}
-            onMouseLeave={() => setActive(false)}
+        <button
+            type={type}
+            disabled={disabled}
+            onClick={onClick}
+            className={`btn sidebar-nav-button ${className ?? ""}`.trim()}
         >
-            {icon && <SysIcon type={icon} />}
-            {label}
-        </div>
+            {icon ? <SysIcon type={icon} className="sidebar-nav-icon" /> : null}
+            <span>{label}</span>
+        </button>
     );
-}
+};
