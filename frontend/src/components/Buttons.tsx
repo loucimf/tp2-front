@@ -1,10 +1,12 @@
 import { useState } from "react";
+import SysIcon, { SVGIcons } from "./Icon";
 
 interface BaseButtonProps {
     disabled?: boolean;
     onClick?: () => void;
     label?: string;
     type?: "button" | "submit";
+    icon?: SVGIcons;
 }
 
 export const CredentialButton: React.FC<BaseButtonProps> = ({
@@ -45,9 +47,14 @@ export const SidebarButton: React.FC<BaseButtonProps> = ({
     onClick,
     label,
     type = "button",
+    icon,
 }) => {
 
     const [active, setActive] = useState(false);
+
+    const style = {
+        height: "3.5rem",
+    }
 
     const handleButton = () => {
         if (disabled) {
@@ -60,11 +67,13 @@ export const SidebarButton: React.FC<BaseButtonProps> = ({
 
     return (        
         <div
+            style={style}
             onClick={() => handleButton()}
-            className={`pointer sidebar-opt ${active ? "active" : ""}`}
+            className={`flex align-center justify-start padding-md pointer btn ${active ? "active" : ""}`}
             onMouseOver={() => setActive(true)}
             onMouseLeave={() => setActive(false)}
         >
+            {icon && <SysIcon type={icon} />}
             {label}
         </div>
     );
