@@ -1,8 +1,11 @@
 import { SidebarButton } from "./Buttons";
+import { SVGIcons } from "./Icon";
 
-interface SidebarButtonProps {
+export interface SidebarButtonProps {
+    icon: SVGIcons;
     label: string;
     onClick?: () => void;
+    content: React.ReactNode;
 }
 
 type SidebarProps = {
@@ -23,6 +26,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ buttons, class_width }) => {
                         key={index}
                         label={button.label}
                         onClick={button.onClick}
+                        icon={button.icon}
                     />
                 ))}
             </div>

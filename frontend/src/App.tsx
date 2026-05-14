@@ -1,6 +1,6 @@
 import { useState } from "react";
 import MainContent from "./components/MainContent";
-import { Sidebar } from "./components/Sidebar";
+import { Sidebar, SidebarButtonProps } from "./components/Sidebar";
 import { useAuth } from "./hooks/useAuth";
 import { CredentialPage } from "./pages/CredentialPage";
 import LibraryPage from "./pages/LibraryPage";
@@ -13,9 +13,9 @@ function App() {
 		setActiveTab(label);
 	};
 
-	const buttons = [
-        { label: "Library", onClick: handleButton("Library"), content: <LibraryPage /> },
-        { label: "Explore", onClick: handleButton("Explore"), content: <ExplorePage /> },
+	const buttons: SidebarButtonProps[] = [
+        { label: "Library", onClick: handleButton("Library"), content: <LibraryPage />, icon: "library" },
+        { label: "Explore", onClick: handleButton("Explore"), content: <ExplorePage />, icon: "explore" },
     ]
 	
 	const [activeTab, setActiveTab] = useState<string>(buttons[0].label);

@@ -74,6 +74,11 @@
   --space-gap-md: 20px;
   --space-gap-lg: 40px;
 
+  --space-padding-sm: 8px;
+  --space-padding-md: 16px;
+  --space-padding-lg: 24px;
+  --space-padding-xl: 32px;
+
   --size-root-min-width: 320px;
   --size-screen-min-height: 100vh;
   --size-card-max-width: 720px;
