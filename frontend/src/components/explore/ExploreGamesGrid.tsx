@@ -1,7 +1,8 @@
 import { RawgGame } from "../../hooks/useGames";
 import SysIcon from "../Icon";
+import GameArtwork from "./GameArtwork";
+import ExplorePagination from "./ExplorePagination";
 import {
-    buildPageItems,
     buildGameSummary,
     formatRating,
     formatReleaseShort,
@@ -22,8 +23,6 @@ const ExploreGamesGrid: React.FC<ExploreGamesGridProps> = ({
     onPageChange,
     totalPages,
 }) => {
-    const pageItems = buildPageItems(currentPage, totalPages);
-
     return (
         <>
             <div className="explore-games-grid">
@@ -38,17 +37,12 @@ const ExploreGamesGrid: React.FC<ExploreGamesGridProps> = ({
                     : games.map((game) => (
                           <article key={game.id} className="explore-game-card">
                               <div className="explore-game-cover-wrap">
-                                  {game.background_image ? (
-                                      <img
-                                          alt={game.name}
-                                          className="explore-game-cover"
-                                          src={game.background_image}
-                                      />
-                                  ) : (
-                                      <div className="explore-game-cover explore-game-cover-fallback">
-                                          {game.name}
-                                      </div>
-                                  )}
+                                  <GameArtwork
+                                      alt={game.name}
+                                      className="explore-game-cover"
+                                      fallbackClassName="explore-game-cover explore-game-cover-fallback"
+                                      src={game.background_image}
+                                  />
 
                                   <span className="explore-game-rating-pill">
                                       <SysIcon type="star" className="explore-inline-icon" />
@@ -81,42 +75,11 @@ const ExploreGamesGrid: React.FC<ExploreGamesGridProps> = ({
                       ))}
             </div>
 
-            <nav className="explore-pagination" aria-label="Games pagination">
-                <button
-                    type="button"
-                    className="explore-page-arrow"
-                    disabled={currentPage === 1}
-                    onClick={() => onPageChange(currentPage - 1)}
-                >
-                    <span aria-hidden="true">‹</span>
-                </button>
-
-                {pageItems.map((item, index) =>
-                    item === "..." ? (
-                        <span key={`ellipsis-${index}`} className="explore-page-ellipsis">
-                            ...
-                        </span>
-                    ) : (
-                        <button
-                            key={item}
-                            type="button"
-                            className={`explore-page-pill ${item === currentPage ? "active" : ""}`}
-                            onClick={() => onPageChange(item)}
-                        >
-                            {item}
-                        </button>
-                    ),
-                )}
-
-                <button
-                    type="button"
-                    className="explore-page-arrow"
-                    disabled={currentPage === totalPages}
-                    onClick={() => onPageChange(currentPage + 1)}
-                >
-                    <span aria-hidden="true">›</span>
-                </button>
-            </nav>
+            <ExplorePagination
+                currentPage={currentPage}
+                onPageChange={onPageChange}
+                totalPages={totalPages}
+            />
         </>
     );
 };

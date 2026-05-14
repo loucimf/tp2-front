@@ -1,5 +1,7 @@
 import { RawgGame } from "../../hooks/useGames";
 import SysIcon from "../Icon";
+import ExploreFeedbackCard from "./ExploreFeedbackCard";
+import GameArtwork from "./GameArtwork";
 import {
     buildGameSummary,
     formatRating,
@@ -23,8 +25,10 @@ const ExploreHero: React.FC<ExploreHeroProps> = ({ game, isLoading }) => {
     if (!game) {
         return (
             <section className="explore-hero explore-empty-state">
-                <h2>No featured game available</h2>
-                <p>Try another search or flip to a different page.</p>
+                <ExploreFeedbackCard
+                    copy="Try another search or flip to a different page."
+                    title="No featured game available"
+                />
             </section>
         );
     }
@@ -35,16 +39,17 @@ const ExploreHero: React.FC<ExploreHeroProps> = ({ game, isLoading }) => {
     const platformNames = getPlatformNames(game);
 
     return (
-        <section
-            className="explore-hero"
-            style={{
-                backgroundImage: `
-                    linear-gradient(90deg, rgba(255, 250, 243, 0.96) 0%, rgba(255, 250, 243, 0.92) 34%, rgba(255, 250, 243, 0.22) 72%),
-                    linear-gradient(180deg, rgba(255, 162, 96, 0.18), rgba(255, 162, 96, 0)),
-                    url(${game.background_image ?? ""})
-                `,
-            }}
-        >
+        <section className="explore-hero">
+            <div className="explore-hero-media" aria-hidden="true">
+                <GameArtwork
+                    alt={game.name}
+                    className="explore-hero-image"
+                    fallbackClassName="explore-hero-image explore-hero-image-fallback"
+                    src={game.background_image}
+                />
+            </div>
+            <div className="explore-hero-scrim" aria-hidden="true" />
+
             <div className="explore-hero-main">
                 <div className="explore-hero-tags">
                     {genreLabels.map((genre) => (
