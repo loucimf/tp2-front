@@ -33,7 +33,7 @@ export class GamesAPI {
 
             if (!response.ok) {
                 throw new Error(`Error fetching games: ${response.statusText}`);
-            }
+            }        
 
             return await response.json();
         } catch (error) {
