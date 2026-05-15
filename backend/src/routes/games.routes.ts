@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { RAWG_API_KEY } from "../env.js";
 
-export const rawgapi = Router();
+export const gamesRouter = Router();
 
 const BASE_URL = "https://api.rawg.io/api/games";
 
-rawgapi.get("/", async (req, res) => {
+gamesRouter.get("/", async (req, res) => {
 
   if (!RAWG_API_KEY) {
     res.status(500).json({

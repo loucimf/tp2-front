@@ -1,5 +1,3 @@
-export const USER_GAME_DEFAULT_CATEGORY = "Pendiente";
-
 export interface UserGame {
   id: number;
   userId: string;
@@ -7,8 +5,7 @@ export interface UserGame {
   title: string;
   releaseDate: string | null;
   price: number | null;
-  category: string;
-  imageUrl: string | null;
+  category: number | null;
   createdAt: string;
 }
 
@@ -18,16 +15,14 @@ export interface CreateUserGameInput {
   title: string;
   releaseDate?: string | null;
   price?: number | null;
-  category?: string;
-  imageUrl?: string | null;
+  category?: number | null;
 }
 
 export interface UpdateUserGameInput {
   title?: string;
   releaseDate?: string | null;
   price?: number | null;
-  category?: string;
-  imageUrl?: string | null;
+  category?: number;
 }
 
 export interface UserGameRecord {
@@ -37,8 +32,7 @@ export interface UserGameRecord {
   title: string;
   release_date: string | null;
   price: string | number | null;
-  category: string | null;
-  image_url: string | null;
+  category: number | null;
   created_at: string;
 }
 
@@ -51,8 +45,7 @@ export function toUserGame(record: UserGameRecord): UserGame {
     releaseDate: record.release_date,
     price:
       typeof record.price === "string" ? Number(record.price) : record.price,
-    category: record.category ?? USER_GAME_DEFAULT_CATEGORY,
-    imageUrl: record.image_url,
+    category: record.category,
     createdAt: record.created_at,
   };
 }
@@ -64,8 +57,7 @@ export const userGameModelExample: UserGame = {
   title: "Grand Theft Auto V",
   releaseDate: "2013-09-17",
   price: 59.99,
-  category: USER_GAME_DEFAULT_CATEGORY,
-  imageUrl: "https://example.com/game-cover.jpg",
+  category: null,
   createdAt: new Date(0).toISOString(),
 };
 
