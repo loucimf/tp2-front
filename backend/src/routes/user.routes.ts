@@ -28,7 +28,7 @@ function readNumber(value: unknown): number | undefined {
 	return Number.isFinite(parsedValue) ? parsedValue : undefined;
 }
 
-userRouter.put("/library", requireAuth, async (req, res) => {
+userRouter.put("/library", async (req, res) => {
 	const authReq = req as AuthenticatedRequest;
 	const gameApiId = readNumber(req.body?.gameId ?? req.query.gameId);
 	const title = readString(req.body?.title ?? req.query.title);
