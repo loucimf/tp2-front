@@ -1,4 +1,5 @@
 import { ExploreSortOption } from "../../hooks/useExploreGames";
+import DashboardSelectControl from "../dashboard/DashboardSelectControl";
 import ExploreChipButton from "./ExploreChipButton";
 
 type ExploreToolbarProps = {
@@ -32,20 +33,19 @@ const ExploreToolbar: React.FC<ExploreToolbarProps> = ({
                 ))}
             </div>
 
-            <label className="explore-sort">
-                <span>Sort by:</span>
-                <select
-                    value={sortOption}
-                    onChange={(event) => {
-                        setSortOption(event.target.value as ExploreSortOption);
-                        setPage(1);
-                    }}
-                >
-                    <option value="popular">Popular</option>
-                    <option value="score">Metacritic</option>
-                    <option value="newest">Newest</option>
-                </select>
-            </label>
+            <DashboardSelectControl
+                label="Sort by:"
+                onChange={(value) => {
+                    setSortOption(value as ExploreSortOption);
+                    setPage(1);
+                }}
+                options={[
+                    { label: "Popular", value: "popular" },
+                    { label: "Metacritic", value: "score" },
+                    { label: "Newest", value: "newest" },
+                ]}
+                value={sortOption}
+            />
         </>
     );
 };

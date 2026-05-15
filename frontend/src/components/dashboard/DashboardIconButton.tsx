@@ -1,6 +1,6 @@
 import SysIcon, { SVGIcons } from "../Icon";
 
-type ExploreIconButtonProps = {
+type DashboardIconButtonProps = {
     className?: string;
     icon: SVGIcons;
     label: string;
@@ -8,7 +8,7 @@ type ExploreIconButtonProps = {
     type?: "button" | "submit";
 };
 
-const ExploreIconButton: React.FC<ExploreIconButtonProps> = ({
+const DashboardIconButton: React.FC<DashboardIconButtonProps> = ({
     className,
     icon,
     label,
@@ -18,13 +18,13 @@ const ExploreIconButton: React.FC<ExploreIconButtonProps> = ({
     return (
         <button
             aria-label={label}
-            className={`explore-icon-button ${className ?? ""}`.trim()}
+            className={`dashboard-icon-button ${className ?? ""}`.trim()}
             type={type}
             onClick={onClick}
         >
-            <SysIcon type={icon} className="explore-inline-icon" />
+            <SysIcon type={icon} className="dashboard-inline-icon" />
         </button>
     );
 };
 
-export default ExploreIconButton;
+export default DashboardIconButton;

@@ -19,6 +19,7 @@ type RawgGame = {
 			slug: string;
 		};
 	}>;
+	playtime: number;
 	rating: number;
 	ratings_count: number;
 	rating_top: number;

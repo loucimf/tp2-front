@@ -1,9 +1,10 @@
-import ExploreFeedbackCard from "../components/explore/ExploreFeedbackCard";
+import DashboardFeedbackCard from "../components/dashboard/DashboardFeedbackCard";
+import DashboardPage from "../components/dashboard/DashboardPage";
+import DashboardSectionHeader from "../components/dashboard/DashboardSectionHeader";
+import DashboardTopbar from "../components/dashboard/DashboardTopbar";
 import ExploreGamesGrid from "../components/explore/ExploreGamesGrid";
 import ExploreHero from "../components/explore/ExploreHero";
-import ExplorePanelHeading from "../components/explore/ExplorePanelHeading";
 import ExploreToolbar from "../components/explore/ExploreToolbar";
-import ExploreTopbar from "../components/explore/ExploreTopbar";
 import { useExploreGames } from "../hooks/useExploreGames";
 
 const ExplorePage: React.FC = () => {
@@ -25,14 +26,21 @@ const ExplorePage: React.FC = () => {
     } = useExploreGames();
 
     return (
-        <section className="explore-dashboard">
-            <ExploreTopbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <DashboardPage
+            className="explore-page"
+            topbar={
+                <DashboardTopbar
+                    inputId="explore-search"
+                    onSearchChange={setSearchTerm}
+                    placeholder="Search games, genres, or publishers..."
+                    value={searchTerm}
+                />
+            }
+        >
+            <ExploreHero game={featuredGame} isLoading={isLoading} />
 
-            <div className="explore-content">
-                <ExploreHero game={featuredGame} isLoading={isLoading} />
-
-                <section className="explore-trending-panel">
-                    <ExplorePanelHeading
+            <section className="explore-trending-panel">
+                <DashboardSectionHeader
                         copy="Fresh catalog picks from the latest RAWG results."
                         title="Trending Games"
                         actions={
@@ -45,31 +53,30 @@ const ExplorePage: React.FC = () => {
                                 sortOption={sortOption}
                             />
                         }
-                    />
+                />
 
-                    {error ? (
-                        <ExploreFeedbackCard
-                            copy={error}
-                            title="Unable to load games"
-                            tone="error"
-                        />
-                    ) : !isLoading && !visibleGames.length ? (
-                        <ExploreFeedbackCard
-                            copy="Clear the search or switch genres to see more results."
-                            title="No games matched this filter"
-                        />
-                    ) : (
-                        <ExploreGamesGrid
-                            currentPage={page}
-                            games={visibleGames}
-                            isLoading={isLoading}
-                            onPageChange={setPage}
-                            totalPages={totalPages}
-                        />
-                    )}
-                </section>
-            </div>
-        </section>
+                {error ? (
+                    <DashboardFeedbackCard
+                        copy={error}
+                        title="Unable to load games"
+                        tone="error"
+                    />
+                ) : !isLoading && !visibleGames.length ? (
+                    <DashboardFeedbackCard
+                        copy="Clear the search or switch genres to see more results."
+                        title="No games matched this filter"
+                    />
+                ) : (
+                    <ExploreGamesGrid
+                        currentPage={page}
+                        games={visibleGames}
+                        isLoading={isLoading}
+                        onPageChange={setPage}
+                        totalPages={totalPages}
+                    />
+                )}
+            </section>
+        </DashboardPage>
     );
 };
 

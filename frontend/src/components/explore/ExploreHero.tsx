@@ -1,6 +1,6 @@
 import { RawgGame } from "../../hooks/useGames";
 import SysIcon from "../Icon";
-import ExploreFeedbackCard from "./ExploreFeedbackCard";
+import DashboardFeedbackCard from "../dashboard/DashboardFeedbackCard";
 import GameArtwork from "./GameArtwork";
 import {
     buildGameSummary,
@@ -25,7 +25,7 @@ const ExploreHero: React.FC<ExploreHeroProps> = ({ game, isLoading }) => {
     if (!game) {
         return (
             <section className="explore-hero explore-empty-state">
-                <ExploreFeedbackCard
+                <DashboardFeedbackCard
                     copy="Try another search or flip to a different page."
                     title="No featured game available"
                 />

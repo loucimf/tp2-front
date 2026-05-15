@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "code-review-graph": {
+      "command": "uvx",
+      "args": [
+        "code-review-graph",
+        "serve"
+      ],
+      "cwd": "/Users/facundoloucim/workspaces/SCHOOL/FRONT-5TA/tp2-front",
+      "type": "stdio",
+      "env": []
+    }
+  }
+}
