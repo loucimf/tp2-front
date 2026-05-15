@@ -7,16 +7,16 @@ import { ENVIRONMENT } from "../env.js";
 
 export const apiRouter = Router();
 
-if (ENVIRONMENT !== "production") {
-	apiRouter.get("/", (_req, res) => {
-		res.json({
-			message: "Express backend is running either: DEV | TEST!",
-		});
-	});
-} else {
+if (ENVIRONMENT === "production") {
 	apiRouter.get("/", requireAuth, (_req, res) => {
 		res.json({
 			message: "Express backend is running PROD!",
+		});
+	});
+} else {
+	apiRouter.get("/", (_req, res) => {
+		res.json({
+			message: "Express backend is running either: DEV | TEST!",
 		});
 	});
 }

@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-	requireAuth,
 	type AuthenticatedRequest,
 } from "../middleware/require-auth.js";
 import {
@@ -78,7 +77,7 @@ userRouter.put("/library", async (req, res) => {
 	}
 });
 
-userRouter.delete("/library", requireAuth, async (req, res) => {
+userRouter.delete("/library", async (req, res) => {
 	const authReq = req as AuthenticatedRequest;
 	const gameApiId = readNumber(req.body?.gameId ?? req.query.gameId);
 
@@ -98,7 +97,7 @@ userRouter.delete("/library", requireAuth, async (req, res) => {
 	}
 });
 
-userRouter.get("/library", requireAuth, async (req, res) => {
+userRouter.get("/library", async (req, res) => {
 	const authReq = req as AuthenticatedRequest;
 
 	try {
