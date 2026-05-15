@@ -1,10 +1,14 @@
 import { Router } from "express";
-import { requireAuth, type AuthenticatedRequest } from "../middleware/require-auth.js";
+import {
+	requireAuth,
+	type AuthenticatedRequest,
+} from "../middleware/require-auth.js";
 import {
 	emptyUserGameListResponse,
 	userGameModelExample,
 } from "../models/user-game.model.js";
 import {
+	deleteUserGame,
 	listUserGames,
 	updateUserGame,
 	upsertUserGame,
@@ -26,11 +30,12 @@ function readNumber(value: unknown): number | undefined {
 
 userRouter.put("/library", requireAuth, async (req, res) => {
 	const authReq = req as AuthenticatedRequest;
-	const gameApiId = readNumber(req.body?.gameId);
-	const title = readString(req.body?.title);
-	const releaseDate = readString(req.body?.releaseDate) ?? null;
-	const price = readNumber(req.body?.price) ?? null;
-	const category = readNumber(req.body?.category) ?? null;
+	const gameApiId = readNumber(req.body?.gameId ?? req.query.gameId);
+	const title = readString(req.body?.title ?? req.query.title);
+	const releaseDate =
+		readString(req.body?.releaseDate ?? req.query.releaseDate) ?? null;
+	const price = readNumber(req.body?.price ?? req.query.price) ?? null;
+	const category = readNumber(req.body?.category ?? req.query.category) ?? null;
 
 	if (!gameApiId) {
 		res.status(400).json({ error: "gameId must be a valid number." });
@@ -68,6 +73,26 @@ userRouter.put("/library", requireAuth, async (req, res) => {
 	} catch (error) {
 		res.status(500).json({
 			error: "Failed to update user library.",
+			details: error instanceof Error ? error.message : "Unknown error",
+		});
+	}
+});
+
+userRouter.delete("/library", requireAuth, async (req, res) => {
+	const authReq = req as AuthenticatedRequest;
+	const gameApiId = readNumber(req.body?.gameId ?? req.query.gameId);
+
+	if (!gameApiId) {
+		res.status(400).json({ error: "gameId must be a valid number." });
+		return;
+	}
+
+	try {
+		await deleteUserGame(authReq.userId, gameApiId);
+		res.status(204).send();
+	} catch (error) {
+		res.status(500).json({
+			error: "Failed to remove game from user library.",
 			details: error instanceof Error ? error.message : "Unknown error",
 		});
 	}

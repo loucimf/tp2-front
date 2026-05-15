@@ -8,7 +8,8 @@ import {
 } from "../models/user-game.model.js";
 
 const USER_GAMES_TABLE = "user_games";
-const USER_GAME_COLUMNS = "id,user_id,game_api_id,title,release_date,price,category,created_at";
+const USER_GAME_COLUMNS =
+  "id,user_id,game_api_id,title,release_date,price,category,created_at";
 
 function toUserGameRecord(input: CreateUserGameInput) {
   return {
@@ -42,6 +43,19 @@ export async function listUserGames(userId: string): Promise<UserGame[]> {
   if (error) throw error;
 
   return ((data ?? []) as UserGameRecord[]).map(toUserGame);
+}
+
+export async function deleteUserGame(
+  userId: string,
+  gameApiId: number,
+): Promise<void> {
+  const { error } = await supabase
+    .from(USER_GAMES_TABLE)
+    .delete()
+    .eq("user_id", userId)
+    .eq("game_api_id", gameApiId);
+
+  if (error) throw error;
 }
 
 export async function upsertUserGame(
