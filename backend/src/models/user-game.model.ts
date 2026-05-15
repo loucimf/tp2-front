@@ -22,7 +22,7 @@ export interface UpdateUserGameInput {
   title?: string;
   releaseDate?: string | null;
   price?: number | null;
-  category?: number;
+  category?: number | null;
 }
 
 export interface UserGameRecord {
