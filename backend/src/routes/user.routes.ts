@@ -72,7 +72,7 @@ userRouter.put("/library", async (req, res) => {
 	} catch (error) {
 		res.status(500).json({
 			error: "Failed to update user library.",
-			details: error instanceof Error ? error.message : "Unknown error",
+			details: error,
 		});
 	}
 });
@@ -92,7 +92,7 @@ userRouter.delete("/library", async (req, res) => {
 	} catch (error) {
 		res.status(500).json({
 			error: "Failed to remove game from user library.",
-			details: error instanceof Error ? error.message : "Unknown error",
+			details: error  ? error : "Unknown error",
 		});
 	}
 });
