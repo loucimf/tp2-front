@@ -6,8 +6,22 @@ type RawgGame = {
 	id: number;
 	name: string;
 	background_image: string | null;
+	genres: Array<{
+		id: number;
+		name: string;
+		slug: string;
+	}>;
 	metacritic: number | null;
+	parent_platforms: Array<{
+		platform: {
+			id: number;
+			name: string;
+			slug: string;
+		};
+	}>;
+	playtime: number;
 	rating: number;
+	ratings_count: number;
 	rating_top: number;
 	released: string | null;
 	slug: string;
@@ -27,9 +41,9 @@ type UseGamesOptions = {
 	pageSize?: number;
 };
 
-const gamesApi = new GamesAPI(
-	import.meta.env.VITE_API_URL || API_URLS.VERCEL_PROD,
-);
+const baseUrl = import.meta.env.VITE_API_URL
+	|| (import.meta.env.DEV ? API_URLS.DEV : API_URLS.VERCEL_PROD);
+const gamesApi = new GamesAPI(baseUrl);
 
 export const useGames = ({
 	enabled = true,
@@ -54,6 +68,10 @@ export const useGames = ({
 		setError(null);
 
 		try {
+			if (!baseUrl) {
+				throw new Error("VITE_API_URL is not configured.");
+			}
+
 			const data: GamesCatalogueResponse = await gamesApi.getGamesCatalogue({
 				ordering,
 				page,
