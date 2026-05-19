@@ -14,10 +14,19 @@ import {
 
 type ExploreHeroProps = {
     game?: RawgGame;
+    isAdded: boolean;
     isLoading: boolean;
+    isSaving: boolean;
+    onAddToLibrary: (game: RawgGame) => void;
 };
 
-const ExploreHero: React.FC<ExploreHeroProps> = ({ game, isLoading }) => {
+const ExploreHero: React.FC<ExploreHeroProps> = ({
+    game,
+    isAdded,
+    isLoading,
+    isSaving,
+    onAddToLibrary,
+}) => {
     if (isLoading) {
         return <section className="explore-hero explore-hero-skeleton" aria-hidden="true" />;
     }
@@ -94,9 +103,14 @@ const ExploreHero: React.FC<ExploreHeroProps> = ({ game, isLoading }) => {
                 </dl>
 
                 <div className="explore-hero-actions">
-                    <button type="button" className="explore-primary-button">
+                    <button
+                        type="button"
+                        className={`explore-primary-button${isAdded ? " saved" : ""}`}
+                        disabled={isSaving || isAdded}
+                        onClick={() => onAddToLibrary(game)}
+                    >
                         <SysIcon type="save" className="explore-button-icon" />
-                        Add to Library
+                        {isAdded ? "In Library" : "Add to Library"}
                     </button>
                     <button type="button" className="explore-secondary-button">
                         <SysIcon type="play" className="explore-button-icon" />

@@ -1,3 +1,4 @@
+import type { User } from "@supabase/supabase-js";
 import { SidebarButton } from "./Buttons";
 import SysIcon, { SVGIcons } from "./Icon";
 
@@ -13,13 +14,40 @@ type SidebarProps = {
     activeSection: SidebarSection;
     buttons: SidebarButtonProps[];
     onSectionChange: (section: SidebarSection) => void;
+    user: User | null;
 };
+
+function getUserDisplayName(user: User | null) {
+    const metadataName =
+        typeof user?.user_metadata?.name === "string"
+            ? user.user_metadata.name
+            : undefined;
+
+    if (metadataName) return metadataName;
+    if (user?.email) return user.email;
+
+    return "Signed in";
+}
+
+function getUserInitials(name: string) {
+    const parts = name
+        .split(/[\s@._-]+/)
+        .map((part) => part.trim())
+        .filter(Boolean);
+
+    return (parts[0]?.[0] ?? "U").toUpperCase()
+        + (parts[1]?.[0] ?? "").toUpperCase();
+}
 
 export const Sidebar: React.FC<SidebarProps> = ({
     activeSection,
     buttons,
     onSectionChange,
+    user,
 }) => {
+    const displayName = getUserDisplayName(user);
+    const initials = getUserInitials(displayName);
+
     return (
         <aside className="dashboard-sidebar">
             <div className="sidebar-brand">
@@ -45,10 +73,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </nav>
 
             <div className="sidebar-profile-card">
-                <div className="sidebar-profile-avatar">AJ</div>
+                <div className="sidebar-profile-avatar">{initials}</div>
                 <div className="sidebar-profile-copy">
-                    <strong>Alex Johnson</strong>
-                    <span>Pro Member</span>
+                    <strong>{displayName}</strong>
+                    <span>Member</span>
                 </div>
             </div>
         </aside>

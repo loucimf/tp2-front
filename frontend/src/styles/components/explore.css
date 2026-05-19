@@ -220,10 +220,23 @@
   box-shadow: 0 16px 28px rgba(223, 125, 67, 0.22);
 }
 
+.explore-primary-button.saved {
+  border-color: rgba(223, 125, 67, 0.24);
+  background: rgba(223, 125, 67, 0.16);
+  color: var(--color-accent);
+  box-shadow: none;
+}
+
 .explore-primary-button:hover,
 .explore-secondary-button:hover,
 .explore-card-action:hover {
   transform: translateY(-1px);
+}
+
+.explore-primary-button:disabled,
+.explore-secondary-button:disabled {
+  cursor: default;
+  transform: none;
 }
 
 .explore-secondary-button {
@@ -429,6 +442,17 @@
 .explore-card-action:hover {
   border-color: var(--dashboard-border-strong);
   background: white;
+}
+
+.explore-card-action:disabled {
+  cursor: default;
+  transform: none;
+}
+
+.explore-card-action.saved {
+  border-color: rgba(223, 125, 67, 0.3);
+  background: rgba(223, 125, 67, 0.14);
+  color: var(--color-accent);
 }
 
 .explore-pagination {

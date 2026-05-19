@@ -9,18 +9,24 @@ import {
 } from "./explore.utils";
 
 type ExploreGamesGridProps = {
+    addedGameIds: Set<number>;
     currentPage: number;
     games: RawgGame[];
     isLoading: boolean;
+    onAddToLibrary: (game: RawgGame) => void;
     onPageChange: (page: number) => void;
+    savingGameId: number | null;
     totalPages: number;
 };
 
 const ExploreGamesGrid: React.FC<ExploreGamesGridProps> = ({
+    addedGameIds,
     currentPage,
     games,
     isLoading,
+    onAddToLibrary,
     onPageChange,
+    savingGameId,
     totalPages,
 }) => {
     return (
@@ -34,7 +40,11 @@ const ExploreGamesGrid: React.FC<ExploreGamesGridProps> = ({
                               aria-hidden="true"
                           />
                       ))
-                    : games.map((game) => (
+                    : games.map((game) => {
+                        const isAdded = addedGameIds.has(game.id);
+                        const isSaving = savingGameId === game.id;
+
+                        return (
                           <article key={game.id} className="explore-game-card">
                               <div className="explore-game-cover-wrap">
                                   <GameArtwork
@@ -64,15 +74,31 @@ const ExploreGamesGrid: React.FC<ExploreGamesGridProps> = ({
 
                                       <button
                                           type="button"
-                                          className="explore-card-action"
-                                          aria-label={`Save ${game.name}`}
+                                          className={`explore-card-action${isAdded ? " saved" : ""}`}
+                                          aria-label={
+                                              isAdded
+                                                  ? `${game.name} is in your library`
+                                                  : `Add ${game.name} to library`
+                                          }
+                                          aria-pressed={isAdded}
+                                          disabled={isSaving || isAdded}
+                                          onClick={() => onAddToLibrary(game)}
+                                          title={
+                                              isAdded
+                                                  ? "In your library"
+                                                  : "Add to library"
+                                          }
                                       >
-                                          <SysIcon type="plus" className="explore-inline-icon" />
+                                          <SysIcon
+                                              type={isAdded ? "save" : "plus"}
+                                              className="explore-inline-icon"
+                                          />
                                       </button>
                                   </div>
                               </div>
                           </article>
-                      ))}
+                        );
+                      })}
             </div>
 
             <ExplorePagination

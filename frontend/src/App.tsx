@@ -26,10 +26,11 @@ const App: React.FC = () => {
                 activeSection={activeSection}
                 buttons={sidebarButtons}
                 onSectionChange={setActiveSection}
+                user={auth.session?.user ?? null}
             />
 
             <main className="dashboard-main">
-                {activeSection === "library" ? <LibraryPage /> : <ExplorePage />}
+                {activeSection === "library" ? <LibraryPage /> : <ExplorePage auth={auth} />}
             </main>
         </div>
     );
