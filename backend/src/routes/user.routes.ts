@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, type Request } from "express";
 import {
 	type AuthenticatedRequest,
 } from "../middleware/require-auth.js";
@@ -27,23 +27,35 @@ function readNumber(value: unknown): number | undefined {
 	return Number.isFinite(parsedValue) ? parsedValue : undefined;
 }
 
+function readUserId(req: Request): string | undefined {
+	return (
+		(req as AuthenticatedRequest).userId ??
+		readString(req.body?.userId ?? req.query.userId)
+	);
+}
+
 userRouter.put("/library", async (req, res) => {
-	const authReq = req as AuthenticatedRequest;
+	const userId = readUserId(req);
 	const gameApiId = readNumber(req.body?.gameId ?? req.query.gameId);
 	const title = readString(req.body?.title ?? req.query.title);
 	const releaseDate = readString(req.body?.releaseDate ?? req.query.releaseDate) ?? null;
 	const price = readNumber(req.body?.price ?? req.query.price) ?? null;
-	const category_id = readNumber(req.body?.category ?? req.query.category) ?? null;
+	const category_id = readNumber(req.body?.categoryId ?? req.query.categoryId) ?? null;
 
 	if (!gameApiId) {
 		res.status(400).json({ error: "gameId must be a valid number." });
 		return;
 	}
 
+	if (!userId) {
+		res.status(400).json({ error: "userId is required." });
+		return;
+	}
+
 	try {
 		if (title) {
 			const item = await upsertUserGame({
-				userId: authReq.userId,
+				userId,
 				gameApiId,
 				title,
 				releaseDate,
@@ -55,7 +67,7 @@ userRouter.put("/library", async (req, res) => {
 			return;
 		}
 
-		const item = await updateUserGame(authReq.userId, gameApiId, {
+		const item = await updateUserGame(userId, gameApiId, {
 			price,
 			category_id: category_id,
 		});
@@ -77,7 +89,7 @@ userRouter.put("/library", async (req, res) => {
 });
 
 userRouter.delete("/library", async (req, res) => {
-	const authReq = req as AuthenticatedRequest;
+	const userId = readUserId(req);
 	const gameApiId = readNumber(req.body?.gameId ?? req.query.gameId);
 
 	if (!gameApiId) {
@@ -85,8 +97,13 @@ userRouter.delete("/library", async (req, res) => {
 		return;
 	}
 
+	if (!userId) {
+		res.status(400).json({ error: "userId is required." });
+		return;
+	}
+
 	try {
-		await deleteUserGame(authReq.userId, gameApiId);
+		await deleteUserGame(userId, gameApiId);
 		res.status(204).send();
 	} catch (error) {
 		res.status(500).json({
@@ -97,10 +114,15 @@ userRouter.delete("/library", async (req, res) => {
 });
 
 userRouter.get("/library", async (req, res) => {
-	const authReq = req as AuthenticatedRequest;
+	const userId = readUserId(req);
+
+	if (!userId) {
+		res.status(400).json({ error: "userId is required." });
+		return;
+	}
 
 	try {
-		const items = await listUserGames(authReq.userId);
+		const items = await listUserGames(userId);
 		res.json({ items });
 	} catch (error) {
 		res.status(500).json({

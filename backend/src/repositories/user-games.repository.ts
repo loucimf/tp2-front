@@ -9,7 +9,7 @@ import {
 
 const USER_GAMES_TABLE = "user_games";
 const USER_GAME_COLUMNS =
-  "id,user_id,game_api_id,title,release_date,price,created_at";
+  "id,user_id,game_api_id,title,release_date,price,category_id,created_at";
 
 function toUserGameRecord(input: CreateUserGameInput) {
   return {
@@ -18,6 +18,7 @@ function toUserGameRecord(input: CreateUserGameInput) {
     title: input.title,
     release_date: input.releaseDate ?? null,
     price: input.price ?? null,
+    category_id: input.category_id ?? null,
   };
 }
 
@@ -28,6 +29,7 @@ function toUserGameUpdate(input: UpdateUserGameInput) {
       ? { release_date: input.releaseDate }
       : {}),
     ...(input.price !== undefined ? { price: input.price } : {}),
+    ...(input.category_id !== undefined ? { category_id: input.category_id } : {}),
   };
 }
 
@@ -59,11 +61,40 @@ export async function deleteUserGame(
 export async function upsertUserGame(
   input: CreateUserGameInput,
 ): Promise<UserGame> {
+  const { data: existingData, error: existingError } = await supabase
+    .from(USER_GAMES_TABLE)
+    .select(USER_GAME_COLUMNS)
+    .eq("user_id", input.userId)
+    .eq("game_api_id", input.gameApiId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (existingError) throw existingError;
+
+  if (existingData) {
+    const { data, error } = await supabase
+      .from(USER_GAMES_TABLE)
+      .update(
+        toUserGameUpdate({
+          title: input.title,
+          releaseDate: input.releaseDate ?? null,
+          price: input.price ?? null,
+          category_id: input.category_id ?? null,
+        }),
+      )
+      .eq("id", (existingData as UserGameRecord).id)
+      .select(USER_GAME_COLUMNS)
+      .single();
+
+    if (error) throw error;
+
+    return toUserGame(data as UserGameRecord);
+  }
+
   const { data, error } = await supabase
     .from(USER_GAMES_TABLE)
-    .upsert(toUserGameRecord(input), {
-      onConflict: "user_id,game_api_id",
-    })
+    .insert(toUserGameRecord(input))
     .select(USER_GAME_COLUMNS)
     .single();
 
