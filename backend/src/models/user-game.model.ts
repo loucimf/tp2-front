@@ -5,7 +5,7 @@ export interface UserGame {
   title: string;
   releaseDate: string | null;
   price: number | null;
-  category: number | null;
+  category_id: number | null;
   createdAt: string;
 }
 
@@ -15,14 +15,14 @@ export interface CreateUserGameInput {
   title: string;
   releaseDate?: string | null;
   price?: number | null;
-  category?: number | null;
+  category_id?: number | null;
 }
 
 export interface UpdateUserGameInput {
   title?: string;
   releaseDate?: string | null;
   price?: number | null;
-  category?: number | null;
+  category_id?: number | null;
 }
 
 export interface UserGameRecord {
@@ -32,7 +32,7 @@ export interface UserGameRecord {
   title: string;
   release_date: string | null;
   price: string | number | null;
-  category: number | null;
+  category_id?: number | null;
   created_at: string;
 }
 
@@ -45,7 +45,7 @@ export function toUserGame(record: UserGameRecord): UserGame {
     releaseDate: record.release_date,
     price:
       typeof record.price === "string" ? Number(record.price) : record.price,
-    category: record.category,
+    category_id: record.category_id ?? null,
     createdAt: record.created_at,
   };
 }
@@ -57,7 +57,7 @@ export const userGameModelExample: UserGame = {
   title: "Grand Theft Auto V",
   releaseDate: "2013-09-17",
   price: 59.99,
-  category: null,
+  category_id: null,
   createdAt: new Date(0).toISOString(),
 };
 

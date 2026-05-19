@@ -31,10 +31,9 @@ userRouter.put("/library", async (req, res) => {
 	const authReq = req as AuthenticatedRequest;
 	const gameApiId = readNumber(req.body?.gameId ?? req.query.gameId);
 	const title = readString(req.body?.title ?? req.query.title);
-	const releaseDate =
-		readString(req.body?.releaseDate ?? req.query.releaseDate) ?? null;
+	const releaseDate = readString(req.body?.releaseDate ?? req.query.releaseDate) ?? null;
 	const price = readNumber(req.body?.price ?? req.query.price) ?? null;
-	const category = readNumber(req.body?.category ?? req.query.category) ?? null;
+	const category_id = readNumber(req.body?.category ?? req.query.category) ?? null;
 
 	if (!gameApiId) {
 		res.status(400).json({ error: "gameId must be a valid number." });
@@ -49,7 +48,7 @@ userRouter.put("/library", async (req, res) => {
 				title,
 				releaseDate,
 				price,
-				category,
+				category_id: category_id,
 			});
 
 			res.status(200).json({ item });
@@ -58,7 +57,7 @@ userRouter.put("/library", async (req, res) => {
 
 		const item = await updateUserGame(authReq.userId, gameApiId, {
 			price,
-			category,
+			category_id: category_id,
 		});
 
 		if (!item) {

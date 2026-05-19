@@ -9,7 +9,7 @@ import {
 
 const USER_GAMES_TABLE = "user_games";
 const USER_GAME_COLUMNS =
-  "id,user_id,game_api_id,title,release_date,price,category,created_at";
+  "id,user_id,game_api_id,title,release_date,price,created_at";
 
 function toUserGameRecord(input: CreateUserGameInput) {
   return {
@@ -18,7 +18,6 @@ function toUserGameRecord(input: CreateUserGameInput) {
     title: input.title,
     release_date: input.releaseDate ?? null,
     price: input.price ?? null,
-    category: input.category ?? null,
   };
 }
 
@@ -29,7 +28,6 @@ function toUserGameUpdate(input: UpdateUserGameInput) {
       ? { release_date: input.releaseDate }
       : {}),
     ...(input.price !== undefined ? { price: input.price } : {}),
-    ...(input.category !== undefined ? { category: input.category } : {}),
   };
 }
 
