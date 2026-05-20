@@ -10,6 +10,18 @@
   gap: var(--space-gap-lg);
 }
 
+.padding-sm {
+  padding: var(--space-padding-sm);
+}
+
+.padding-md {
+  padding: var(--space-padding-md);
+}
+
+.padding-lg {
+  padding: var(--space-padding-lg);
+}
+
 .pointer {
   cursor: pointer;
 }

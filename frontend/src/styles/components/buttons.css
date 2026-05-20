@@ -1,13 +1,24 @@
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
   cursor: pointer;
   user-select: none;
+  font-family: var(--font-family-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  border-radius: 20px;
+  border: 0;
+  color: black;
   transition:
     background-color var(--transition-base),
     border-color var(--transition-base),
     color var(--transition-base),
     transform var(--transition-fast),
     box-shadow var(--transition-base),
-    opacity var(--transition-base);
+    opacity var(--transition-base)
+    filter var(--transition-base);
 }
 
 .btn:hover {
@@ -23,29 +34,9 @@
 
 .btn.active {
   transform: scale(0.98);
-  background: var(--color-surface-pressed);
+  background: linear-gradient(180deg, #dd8045 0%, #d97639 100%);
   border-color: var(--color-accent-strong);
-}
-
-.credential-btn {
-  background: var(--color-button-bg);
-  border-color: var(--color-button-border);
-  box-shadow: var(--color-button-shadow);
-  color: var(--color-button-text);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  min-height: 52px;
-}
-
-.credential-btn:hover {
-  background: var(--color-button-bg-hover);
-  border-color: var(--color-accent-strong);
-  transform: translateY(-1px);
-}
-
-.credential-btn.active {
-  background: var(--color-button-bg-pressed);
-  border-color: var(--color-accent);
+  color: white
 }
 
 .btn.disabled,

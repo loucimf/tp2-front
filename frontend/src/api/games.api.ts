@@ -33,6 +33,21 @@ export class GamesAPI {
 
             if (!response.ok) {
                 throw new Error(`Error fetching games: ${response.statusText}`);
+            }        
+
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async getGame(gameId: number) {
+        try {
+            const response = await fetch(`${this.baseUrl}/games/${gameId}`);
+
+            if (!response.ok) {
+                throw new Error(`Error fetching game: ${response.statusText}`);
             }
 
             return await response.json();
