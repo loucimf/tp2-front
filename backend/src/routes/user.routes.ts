@@ -12,6 +12,10 @@ import {
 	updateUserGame,
 	upsertUserGame,
 } from "../repositories/user-games.repository.js";
+import {
+	createUserCategory,
+	listUserCategories,
+} from "../repositories/user-categories.repository.js";
 
 export const userRouter = Router();
 
@@ -137,4 +141,48 @@ userRouter.get("/library/example", (_req, res) => {
 		items: emptyUserGameListResponse,
 		example: userGameModelExample,
 	});
+});
+
+userRouter.get("/categories", async (req, res) => {
+	const userId = readUserId(req);
+
+	if (!userId) {
+		res.status(400).json({ error: "userId is required." });
+		return;
+	}
+
+	try {
+		const items = await listUserCategories(userId);
+		res.json({ items });
+	} catch (error) {
+		res.status(500).json({
+			error: "Failed to load user categories.",
+			details: error instanceof Error ? error.message : "Unknown error",
+		});
+	}
+});
+
+userRouter.post("/categories", async (req, res) => {
+	const userId = readUserId(req);
+	const title = readString(req.body?.title ?? req.query.title);
+
+	if (!userId) {
+		res.status(400).json({ error: "userId is required." });
+		return;
+	}
+
+	if (!title) {
+		res.status(400).json({ error: "title is required." });
+		return;
+	}
+
+	try {
+		const item = await createUserCategory(userId, title);
+		res.status(201).json({ item });
+	} catch (error) {
+		res.status(500).json({
+			error: "Failed to create user category.",
+			details: error instanceof Error ? error.message : "Unknown error",
+		});
+	}
 });
