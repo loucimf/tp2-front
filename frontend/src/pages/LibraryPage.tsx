@@ -1,17 +1,26 @@
+import { useState } from "react";
 import DashboardFeedbackCard from "../components/dashboard/DashboardFeedbackCard";
 import DashboardPage from "../components/dashboard/DashboardPage";
 import DashboardSectionHeader from "../components/dashboard/DashboardSectionHeader";
 import DashboardSelectControl from "../components/dashboard/DashboardSelectControl";
 import DashboardTopbar from "../components/dashboard/DashboardTopbar";
 import LibraryCategorySection from "../components/library/LibraryCategorySection";
+import type { UseAuthResult } from "../hooks/useAuth";
 import { LibrarySortOption, useLibraryGames } from "../hooks/useLibraryGames";
 
-const LibraryPage: React.FC = () => {
+type LibraryPageProps = {
+    auth: UseAuthResult;
+};
+
+const LibraryPage: React.FC<LibraryPageProps> = ({ auth }) => {
+    const [categoryTitle, setCategoryTitle] = useState("");
     const {
         availableCategories,
         categories,
+        createCategory,
         error,
         gamesCount,
+        isCreatingCategory,
         isLoading,
         searchTerm,
         selectedCategory,
@@ -19,7 +28,17 @@ const LibraryPage: React.FC = () => {
         setSelectedCategory,
         setSortOption,
         sortOption,
-    } = useLibraryGames();
+    } = useLibraryGames(auth);
+
+    const handleCreateCategory = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const created = await createCategory(categoryTitle);
+
+        if (created) {
+            setCategoryTitle("");
+        }
+    };
 
     return (
         <DashboardPage
@@ -60,6 +79,23 @@ const LibraryPage: React.FC = () => {
                                 ]}
                                 value={sortOption}
                             />
+                            <form
+                                className="library-category-form"
+                                onSubmit={handleCreateCategory}
+                            >
+                                <input
+                                    aria-label="New category name"
+                                    onChange={(event) => setCategoryTitle(event.target.value)}
+                                    placeholder="New category"
+                                    value={categoryTitle}
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={isCreatingCategory || !categoryTitle.trim()}
+                                >
+                                    Create
+                                </button>
+                            </form>
                         </div>
                     }
                 />
@@ -73,8 +109,8 @@ const LibraryPage: React.FC = () => {
                 />
             ) : !isLoading && !categories.length ? (
                 <DashboardFeedbackCard
-                    copy="Try another search or category filter to repopulate your library."
-                    title="No games found in this library view"
+                    copy="Add games from Explore or create a category to start organizing your collection."
+                    title="No saved games found"
                 />
             ) : (
                 <div className="library-sections">

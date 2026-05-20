@@ -1,4 +1,3 @@
-import { RawgGame } from "../../hooks/useGames";
 import { SVGIcons } from "../Icon";
 
 export const formatLibraryRelease = (value: string | null) => {
@@ -13,16 +12,16 @@ export const formatLibraryRelease = (value: string | null) => {
     }).format(new Date(value));
 };
 
-export const formatLibraryRating = (value: number, top: number) =>
-    `${value.toFixed(1)} / ${top.toFixed(1)}`;
+export const formatLibraryPrice = (value: number | null) => {
+    if (value === null) {
+        return "Not set";
+    }
 
-export const formatLibraryReviews = (value: number) =>
-    new Intl.NumberFormat("en-US").format(value);
-
-export const formatPlaytime = (value: number) => `${value.toFixed(1)} hrs`;
-
-export const getLibraryCardChips = (game: RawgGame) =>
-    game.genres.slice(0, 2).map((genre) => genre.name);
+    return new Intl.NumberFormat("en-US", {
+        currency: "USD",
+        style: "currency",
+    }).format(value);
+};
 
 export const getCategoryIcon = (category: string): SVGIcons => {
     const name = category.toLowerCase();

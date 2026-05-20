@@ -30,7 +30,11 @@ const App: React.FC = () => {
             />
 
             <main className="dashboard-main">
-                {activeSection === "library" ? <LibraryPage /> : <ExplorePage auth={auth} />}
+                {activeSection === "library" ? (
+                    <LibraryPage auth={auth} />
+                ) : (
+                    <ExplorePage auth={auth} />
+                )}
             </main>
         </div>
     );
