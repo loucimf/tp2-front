@@ -239,6 +239,30 @@
   font-size: 0.75rem;
 }
 
+.library-category-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.library-category-picker span {
+  color: var(--dashboard-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: 0.75rem;
+}
+
+.library-category-picker select {
+  min-height: 2.35rem;
+  width: 100%;
+  border: 1px solid var(--dashboard-border);
+  border-radius: 0.7rem;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--dashboard-text);
+  font-family: var(--font-family-mono);
+  font-size: 0.82rem;
+  padding: 0 0.7rem;
+}
+
 @media (max-width: 1250px) {
   .library-category-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

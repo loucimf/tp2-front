@@ -39,7 +39,7 @@ export class UserAPI {
             if (!response.ok) {
                 throw new Error(`Error fetching user's game library: ${response.statusText}`);
             }
-            return await response.json();
+            return await response.json() as { items: UserLibraryGame[] };
         } catch (error) {
             console.error(error);
             throw error;
@@ -102,6 +102,7 @@ export class UserAPI {
 
     async addGameToLibrary(input: {
         accessToken?: string;
+        backgroundImage?: string | null;
         gameId: number;
         price?: number | null;
         releaseDate?: string | null;
@@ -140,6 +141,45 @@ export class UserAPI {
             }
 
             return data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async updateGameCategory(input: {
+        accessToken?: string;
+        categoryId: number | null;
+        gameId: number;
+        userId: string;
+    }) {
+        try {
+            const searchParams = new URLSearchParams({
+                gameId: String(input.gameId),
+                userId: input.userId,
+            });
+
+            if (input.categoryId !== null) {
+                searchParams.set("categoryId", String(input.categoryId));
+            }
+
+            const response = await fetch(
+                `${this.baseUrl}/user-games/library?${searchParams.toString()}`,
+                {
+                    method: "PUT",
+                    headers: this.getHeaders(input.accessToken),
+                },
+            );
+
+            const data = await response.json().catch(() => null);
+
+            if (!response.ok) {
+                throw new Error(
+                    data?.error ?? `Error updating game category: ${response.statusText}`,
+                );
+            }
+
+            return data as { item: UserLibraryGame };
         } catch (error) {
             console.error(error);
             throw error;
