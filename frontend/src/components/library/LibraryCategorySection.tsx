@@ -1,16 +1,23 @@
 import { LibraryCategory } from "../../hooks/useLibraryGames";
+import type { UserCategory } from "../../api/user.api";
 import SysIcon from "../Icon";
 import LibraryGameCard from "./LibraryGameCard";
 import { getCategoryIcon } from "./library.utils";
 
 type LibraryCategorySectionProps = {
     category: LibraryCategory;
+    categoryOptions: UserCategory[];
     isLoading: boolean;
+    onCategoryChange: (gameId: number, categoryId: number | null) => void;
+    updatingGameId: number | null;
 };
 
 const LibraryCategorySection: React.FC<LibraryCategorySectionProps> = ({
     category,
+    categoryOptions,
     isLoading,
+    onCategoryChange,
+    updatingGameId,
 }) => {
     return (
         <section className="library-category-section" aria-labelledby={`library-category-${category.id}`}>
@@ -35,7 +42,15 @@ const LibraryCategorySection: React.FC<LibraryCategorySectionProps> = ({
                           />
                       ))
                     : category.games.map((game) => (
-                          <LibraryGameCard key={game.id} game={game} />
+                          <LibraryGameCard
+                              key={game.id}
+                              categoryOptions={categoryOptions}
+                              game={game}
+                              isUpdatingCategory={updatingGameId === game.id}
+                              onCategoryChange={(categoryId) =>
+                                  onCategoryChange(game.id, categoryId)
+                              }
+                          />
                       ))}
             </div>
         </section>

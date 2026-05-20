@@ -23,8 +23,19 @@ function getUserDisplayName(user: User | null) {
             ? user.user_metadata.name
             : undefined;
 
-    if (metadataName) return metadataName;
-    if (user?.email) return user.email;
+    const rawName = metadataName ?? user?.email?.split("@")[0];
+
+    if (rawName) {
+        const simplifiedName = rawName
+            .replace(/\d+/g, "")
+            .split(/[\s._-]+/)
+            .map((part) => part.trim())
+            .filter(Boolean)
+            .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+            .join(" ");
+
+        if (simplifiedName) return simplifiedName;
+    }
 
     return "Signed in";
 }

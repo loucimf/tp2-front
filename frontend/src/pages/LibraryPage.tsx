@@ -18,6 +18,7 @@ const LibraryPage: React.FC<LibraryPageProps> = ({ auth }) => {
         availableCategories,
         categories,
         createCategory,
+        customCategories,
         error,
         gamesCount,
         isCreatingCategory,
@@ -28,6 +29,8 @@ const LibraryPage: React.FC<LibraryPageProps> = ({ auth }) => {
         setSelectedCategory,
         setSortOption,
         sortOption,
+        updateGameCategory,
+        updatingCategoryGameId,
     } = useLibraryGames(auth);
 
     const handleCreateCategory = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -124,7 +127,16 @@ const LibraryPage: React.FC<LibraryPageProps> = ({ auth }) => {
                         <LibraryCategorySection
                             key={category.id}
                             category={category}
+                            categoryOptions={customCategories}
                             isLoading={isLoading}
+                            onCategoryChange={(gameId, categoryId) => {
+                                const game = category.games.find((item) => item.id === gameId);
+
+                                if (game) {
+                                    void updateGameCategory(game, categoryId);
+                                }
+                            }}
+                            updatingGameId={updatingCategoryGameId}
                         />
                     ))}
                 </div>

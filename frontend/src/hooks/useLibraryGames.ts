@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { GamesAPI } from "../api/games.api";
 import { API_URLS } from "../api/global.api";
 import {
     UserAPI,
@@ -16,6 +17,7 @@ const orderingByOption = {
 export type LibrarySortOption = keyof typeof orderingByOption;
 
 export type LibraryGame = UserLibraryGame & {
+    coverUrl: string | null;
     categoryName: string;
 };
 
@@ -32,6 +34,12 @@ const ALL_CATEGORIES = "All categories";
 const baseUrl = import.meta.env.VITE_API_URL
     || (import.meta.env.DEV ? API_URLS.DEV : API_URLS.VERCEL_PROD);
 const userApi = new UserAPI(baseUrl);
+const gamesApi = new GamesAPI(baseUrl);
+
+type RawgGameDetails = {
+    background_image: string | null;
+    id: number;
+};
 
 const sortGamesLocally = (games: LibraryGame[], sortOption: LibrarySortOption) => {
     const nextGames = [...games];
@@ -73,12 +81,16 @@ const toCategoryNameById = (categories: UserCategory[]) => {
 
 export const useLibraryGames = (auth: UseAuthResult) => {
     const [games, setGames] = useState<UserLibraryGame[]>([]);
+    const [coverUrlsByGameId, setCoverUrlsByGameId] = useState<Map<number, string | null>>(
+        () => new Map(),
+    );
     const [customCategories, setCustomCategories] = useState<UserCategory[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORIES);
     const [sortOption, setSortOption] = useState<LibrarySortOption>("recent");
     const [isLoading, setIsLoading] = useState(true);
     const [isCreatingCategory, setIsCreatingCategory] = useState(false);
+    const [updatingCategoryGameId, setUpdatingCategoryGameId] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     const userId = auth.session?.user.id;
@@ -100,8 +112,21 @@ export const useLibraryGames = (auth: UseAuthResult) => {
                 userApi.getGamesLibrary({ accessToken, userId }),
                 userApi.getCategories({ accessToken, userId }),
             ]);
+            const libraryGames = libraryResponse.items ?? [];
 
-            setGames(libraryResponse.items ?? []);
+            const rawgDetails = await Promise.all(
+                libraryGames.map(async (game) => {
+                    try {
+                        const details = await gamesApi.getGame(game.gameApiId) as RawgGameDetails;
+                        return [game.gameApiId, details.background_image] as const;
+                    } catch {
+                        return [game.gameApiId, null] as const;
+                    }
+                }),
+            );
+
+            setGames(libraryGames);
+            setCoverUrlsByGameId(new Map(rawgDetails));
             setCustomCategories(categoriesResponse.items ?? []);
         } catch (fetchError) {
             setError(
@@ -127,12 +152,13 @@ export const useLibraryGames = (auth: UseAuthResult) => {
         () =>
             games.map((game) => ({
                 ...game,
+                coverUrl: coverUrlsByGameId.get(game.gameApiId) ?? null,
                 categoryName:
                     game.category_id !== null
                         ? categoryNameById.get(game.category_id) ?? UNCATEGORIZED
                         : UNCATEGORIZED,
             })),
-        [categoryNameById, games],
+        [categoryNameById, coverUrlsByGameId, games],
     );
 
     const normalizedSearch = searchTerm.trim().toLowerCase();
@@ -224,10 +250,45 @@ export const useLibraryGames = (auth: UseAuthResult) => {
         }
     };
 
+    const updateGameCategory = async (game: LibraryGame, categoryId: number | null) => {
+        if (!userId) {
+            return false;
+        }
+
+        setUpdatingCategoryGameId(game.id);
+        setError(null);
+
+        try {
+            const { item } = await userApi.updateGameCategory({
+                accessToken,
+                categoryId,
+                gameId: game.gameApiId,
+                userId,
+            });
+
+            setGames((current) =>
+                current.map((currentGame) =>
+                    currentGame.id === item.id ? item : currentGame,
+                ),
+            );
+            return true;
+        } catch (updateError) {
+            setError(
+                updateError instanceof Error
+                    ? updateError.message
+                    : "Failed to update game category.",
+            );
+            return false;
+        } finally {
+            setUpdatingCategoryGameId(null);
+        }
+    };
+
     return {
         availableCategories,
         categories,
         createCategory,
+        customCategories,
         error,
         gamesCount: visibleGames.length,
         isCreatingCategory,
@@ -238,5 +299,7 @@ export const useLibraryGames = (auth: UseAuthResult) => {
         setSelectedCategory,
         setSortOption,
         sortOption,
+        updateGameCategory,
+        updatingCategoryGameId,
     };
 };
