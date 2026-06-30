@@ -28,11 +28,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run lint
+      - name: Lint
         run: npm run lint
 
-      - name: Run tests
+      - name: Test
         run: npm run test
 
-      - name: Build project
+      - name: Build
         run: npm run build
