@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { RawgGame, useGames } from "./useGames";
 
-const orderingByOption = {
+export const orderingByOption = {
     newest: "-released",
     popular: "-rating",
     score: "-metacritic",
@@ -45,7 +45,11 @@ export const useExploreGames = (): UseExploreGamesResult => {
         () => [
             "All",
             ...Array.from(
-                new Set(games.flatMap((game) => game.genres.map((genre) => genre.name))),
+                new Set(
+                    games.flatMap((game) =>
+                        game.genres.map((genre) => genre.name),
+                    ),
+                ),
             ).slice(0, 4),
         ],
         [games],
@@ -72,9 +76,11 @@ export const useExploreGames = (): UseExploreGamesResult => {
     );
 
     const featuredGame = filteredGames[0] ?? games[0];
+
     const visibleGames = (filteredGames[0] ? filteredGames : games)
         .filter((game) => game.id !== featuredGame?.id)
         .slice(0, 4);
+
     const totalPages = Math.max(1, Math.ceil(count / 9));
 
     return {

@@ -8,7 +8,7 @@ import {
 } from "../api/user.api";
 import type { UseAuthResult } from "./useAuth";
 
-const orderingByOption = {
+export const orderingByOption = {
     popular: "popular",
     recent: "recent",
     title: "title",
@@ -31,8 +31,10 @@ export type LibraryCategory = {
 const UNCATEGORIZED = "Uncategorized";
 const ALL_CATEGORIES = "All categories";
 
-const baseUrl = import.meta.env.VITE_API_URL
-    || (import.meta.env.DEV ? API_URLS.DEV : API_URLS.VERCEL_PROD);
+const baseUrl =
+    import.meta.env.VITE_API_URL ||
+    (import.meta.env.DEV ? API_URLS.DEV : API_URLS.VERCEL_PROD);
+
 const userApi = new UserAPI(baseUrl);
 const gamesApi = new GamesAPI(baseUrl);
 
@@ -41,14 +43,21 @@ type RawgGameDetails = {
     id: number;
 };
 
-const sortGamesLocally = (games: LibraryGame[], sortOption: LibrarySortOption) => {
+const sortGamesLocally = (
+    games: LibraryGame[],
+    sortOption: LibrarySortOption,
+) => {
     const nextGames = [...games];
 
     switch (sortOption) {
         case "title":
-            return nextGames.sort((left, right) => left.title.localeCompare(right.title));
+            return nextGames.sort((left, right) =>
+                left.title.localeCompare(right.title),
+            );
         case "popular":
-            return nextGames.sort((left, right) => right.gameApiId - left.gameApiId);
+            return nextGames.sort((left, right) =>
+                right.gameApiId - left.gameApiId,
+            );
         case "recent":
         default:
             return nextGames.sort((left, right) =>
@@ -81,16 +90,19 @@ const toCategoryNameById = (categories: UserCategory[]) => {
 
 export const useLibraryGames = (auth: UseAuthResult) => {
     const [games, setGames] = useState<UserLibraryGame[]>([]);
-    const [coverUrlsByGameId, setCoverUrlsByGameId] = useState<Map<number, string | null>>(
-        () => new Map(),
-    );
+    const [coverUrlsByGameId, setCoverUrlsByGameId] = useState<
+        Map<number, string | null>
+    >(() => new Map());
     const [customCategories, setCustomCategories] = useState<UserCategory[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORIES);
-    const [sortOption, setSortOption] = useState<LibrarySortOption>("recent");
+    const [selectedCategory, setSelectedCategory] =
+        useState(ALL_CATEGORIES);
+    const [sortOption, setSortOption] =
+        useState<LibrarySortOption>("recent");
     const [isLoading, setIsLoading] = useState(true);
     const [isCreatingCategory, setIsCreatingCategory] = useState(false);
-    const [updatingCategoryGameId, setUpdatingCategoryGameId] = useState<number | null>(null);
+    const [updatingCategoryGameId, setUpdatingCategoryGameId] =
+        useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     const userId = auth.session?.user.id;
@@ -112,13 +124,21 @@ export const useLibraryGames = (auth: UseAuthResult) => {
                 userApi.getGamesLibrary({ accessToken, userId }),
                 userApi.getCategories({ accessToken, userId }),
             ]);
+
             const libraryGames = libraryResponse.items ?? [];
 
             const rawgDetails = await Promise.all(
                 libraryGames.map(async (game) => {
                     try {
-                        const details = await gamesApi.getGame(game.gameApiId) as RawgGameDetails;
-                        return [game.gameApiId, details.background_image] as const;
+                        const details =
+                            (await gamesApi.getGame(
+                                game.gameApiId,
+                            )) as RawgGameDetails;
+
+                        return [
+                            game.gameApiId,
+                            details.background_image,
+                        ] as const;
                     } catch {
                         return [game.gameApiId, null] as const;
                     }
@@ -152,10 +172,12 @@ export const useLibraryGames = (auth: UseAuthResult) => {
         () =>
             games.map((game) => ({
                 ...game,
-                coverUrl: coverUrlsByGameId.get(game.gameApiId) ?? null,
+                coverUrl:
+                    coverUrlsByGameId.get(game.gameApiId) ?? null,
                 categoryName:
                     game.category_id !== null
-                        ? categoryNameById.get(game.category_id) ?? UNCATEGORIZED
+                        ? categoryNameById.get(game.category_id) ??
+                          UNCATEGORIZED
                         : UNCATEGORIZED,
             })),
         [categoryNameById, coverUrlsByGameId, games],
@@ -166,32 +188,43 @@ export const useLibraryGames = (auth: UseAuthResult) => {
     const visibleGames = useMemo(() => {
         const filteredGames = libraryGames.filter((game) => {
             const matchesCategory =
-                selectedCategory === ALL_CATEGORIES
-                || game.categoryName === selectedCategory;
+                selectedCategory === ALL_CATEGORIES ||
+                game.categoryName === selectedCategory;
 
             const matchesSearch =
-                !normalizedSearch
-                || game.title.toLowerCase().includes(normalizedSearch)
-                || String(game.gameApiId).includes(normalizedSearch);
+                !normalizedSearch ||
+                game.title.toLowerCase().includes(normalizedSearch) ||
+                String(game.gameApiId).includes(normalizedSearch);
 
             return matchesCategory && matchesSearch;
         });
 
         return sortGamesLocally(filteredGames, sortOption);
-    }, [libraryGames, normalizedSearch, selectedCategory, sortOption]);
+    }, [
+        libraryGames,
+        normalizedSearch,
+        selectedCategory,
+        sortOption,
+    ]);
 
     const categories = useMemo<LibraryCategory[]>(() => {
         const visibleCategoryMap = createCategoryMap(visibleGames);
+
         const categoryNames = [
             ...customCategories.map((category) => category.title),
-            ...(visibleCategoryMap.has(UNCATEGORIZED) ? [UNCATEGORIZED] : []),
+            ...(visibleCategoryMap.has(UNCATEGORIZED)
+                ? [UNCATEGORIZED]
+                : []),
         ];
 
-        const uniqueCategoryNames = Array.from(new Set(categoryNames));
+        const uniqueCategoryNames = Array.from(
+            new Set(categoryNames),
+        );
 
         return uniqueCategoryNames
             .map((name) => {
-                const categoryGames = visibleCategoryMap.get(name) ?? [];
+                const categoryGames =
+                    visibleCategoryMap.get(name) ?? [];
 
                 return {
                     count: categoryGames.length,
@@ -202,8 +235,8 @@ export const useLibraryGames = (auth: UseAuthResult) => {
             })
             .filter(
                 (category) =>
-                    selectedCategory === ALL_CATEGORIES
-                    || category.name === selectedCategory,
+                    selectedCategory === ALL_CATEGORIES ||
+                    category.name === selectedCategory,
             );
     }, [customCategories, selectedCategory, visibleGames]);
 
@@ -211,7 +244,9 @@ export const useLibraryGames = (auth: UseAuthResult) => {
         () => [
             ALL_CATEGORIES,
             ...customCategories.map((category) => category.title),
-            ...(libraryGames.some((game) => game.categoryName === UNCATEGORIZED)
+            ...(libraryGames.some(
+                (game) => game.categoryName === UNCATEGORIZED,
+            )
                 ? [UNCATEGORIZED]
                 : []),
         ],
@@ -235,7 +270,10 @@ export const useLibraryGames = (auth: UseAuthResult) => {
                 userId,
             });
 
-            setCustomCategories((current) => [...current, item]);
+            setCustomCategories((current) => [
+                ...current,
+                item,
+            ]);
             setSelectedCategory(item.title);
             return true;
         } catch (createError) {
@@ -250,27 +288,32 @@ export const useLibraryGames = (auth: UseAuthResult) => {
         }
     };
 
-    const updateGameCategory = async (game: LibraryGame, categoryId: number | null) => {
-        if (!userId) {
-            return false;
-        }
+    const updateGameCategory = async (
+        game: LibraryGame,
+        categoryId: number | null,
+    ) => {
+        if (!userId) return false;
 
         setUpdatingCategoryGameId(game.id);
         setError(null);
 
         try {
-            const { item } = await userApi.updateGameCategory({
-                accessToken,
-                categoryId,
-                gameId: game.gameApiId,
-                userId,
-            });
+            const { item } =
+                await userApi.updateGameCategory({
+                    accessToken,
+                    categoryId,
+                    gameId: game.gameApiId,
+                    userId,
+                });
 
             setGames((current) =>
                 current.map((currentGame) =>
-                    currentGame.id === item.id ? item : currentGame,
+                    currentGame.id === item.id
+                        ? item
+                        : currentGame,
                 ),
             );
+
             return true;
         } catch (updateError) {
             setError(
