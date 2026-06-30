@@ -66,7 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <SysIcon type="play" className="sidebar-brand-icon" />
                 </div>
                 <div className="sidebar-brand-copy">
-                    <span className="sidebar-brand-name">Nexus</span>
+                    <span className="sidebar-brand-name">Cool</span>
                     <span className="sidebar-brand-name">Games</span>
                 </div>
             </div>
@@ -87,7 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <div className="sidebar-profile-avatar">{initials}</div>
                 <div className="sidebar-profile-copy">
                     <strong>{displayName}</strong>
-                    <span>Member</span>
+                    <span>Memberr</span>
                 </div>
             </div>
         </aside>
